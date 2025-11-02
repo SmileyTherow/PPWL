@@ -15,13 +15,6 @@
                 required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
-        I. Login Multi User
-        1) Menambahkan kolom role pada tabel users
-        Agar sistem bisa membedakan pengguna sebagai admin atau user, kita perlu
-        menambahkan kolom role.
-        • Buat migrasi baru
-        • Edit file migrasi
-        (database/migrations/...add_role_to_users_table.php):
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />

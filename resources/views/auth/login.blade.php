@@ -15,7 +15,6 @@
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
                 autocomplete="current-password" />
-            H. Membuat halaman Register
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
         <!-- Remember Me -->
@@ -33,6 +32,11 @@
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+            <a href="{{ route('register') }}" class="ms-3">
+                <x-primary-button type="button">
+                    {{ __('Register') }}
+                </x-primary-button>
+            </a>
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
