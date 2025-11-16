@@ -17,5 +17,14 @@ class AdminSeeder extends Seeder
                 'role' => 'admin'
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'ahmadzidantamimy@gmail.com'],
+            [
+                'name' => 'zidan',
+                'password' => bcrypt('admin1234'),
+                'role' => 'admin'
+            ]
+        );
     }
 }
