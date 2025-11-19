@@ -143,6 +143,18 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tambahan teks Selamat Welcome -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">Selamat datang di halaman Dashboard UTS PPWL</h4>
+                            <p class="mb-0">Sistem Manajemen Dashboard untuk UTS Pemrograman Platform Web Lanjut</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
