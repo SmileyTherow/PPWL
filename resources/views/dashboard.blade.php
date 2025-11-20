@@ -18,8 +18,7 @@
                                         selamat bekerja <span class="fw-bold"></span> nikmati harimu
                                         dengan lebih baik
                                     </p>
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-primary">Lihat
-                                        Data</a>
+                                    <a href="{{ route('products.index') }}" class="btn btn-sm btn-outline-primary">Lihat Data</a>
                                 </div>
                             </div>
                             <div class="col-sm-5 text-center text-sm-left">
