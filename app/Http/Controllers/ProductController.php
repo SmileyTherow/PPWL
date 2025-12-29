@@ -15,7 +15,7 @@ class ProductController extends Controller
             $query->where('nama', 'like', '%' . request('search') . '%');
         })->paginate(10);
 
-        return view('products.index', compact('products'),[
+        return view('products.index', compact('products'), [
             'title' => 'Daftar Produk'
         ]);
     }
@@ -23,7 +23,7 @@ class ProductController extends Controller
     public function create(): View
     {
         $categories = Category::all();
-        return view('products.create', compact('categories'),[
+        return view('products.create', compact('categories'), [
             'title' => 'Tambah Produk Baru'
         ]);
     }
@@ -57,7 +57,7 @@ class ProductController extends Controller
     public function edit(Product $product): View
     {
         $categories = Category::all();
-        return view('products.edit', compact('product', 'categories'),[
+        return view('products.edit', compact('product', 'categories'), [
             'title' => 'Edit Produk'
         ]);
     }
@@ -92,5 +92,10 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('products.index')
             ->with('success', 'Produk berhasil dihapus.');
+    }
+
+    public function show(\App\Models\Product $product)
+    {
+        return view('products.show', compact('product'));
     }
 }
