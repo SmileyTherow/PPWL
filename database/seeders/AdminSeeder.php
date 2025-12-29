@@ -14,7 +14,9 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'Administrator',
                 'password' => bcrypt('password'),
-                'role' => 'admin'
+                'role' => 'admin',
+                'alamat' => 'Alamat Admin',
+                'telepon' => '081234567890',
             ]
         );
 
@@ -23,7 +25,9 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'zidan',
                 'password' => bcrypt('admin1234'),
-                'role' => 'admin'
+                'role' => 'admin',
+                'alamat' => 'Alamat anda',
+                'telepon' => '081347234567',
             ]
         );
     }
