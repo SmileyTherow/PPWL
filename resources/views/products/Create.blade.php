@@ -6,7 +6,7 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         {{-- Breadcrumb dinamis --}}
         <x-breadcrumb :items="[
-            'Produk' => route('products.index'),
+            'Produk' => route('admin.products.index'),
             'Tambah Produk' => '',
         ]" />
 
@@ -21,7 +21,7 @@
             <div class="col-xxl">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Foto
@@ -45,8 +45,8 @@
                                                 class="bx bx-package"></i></span>
                                         <input type="text" name="nama"
                                             class="form-control @error('nama') is-invalid @enderror"
-                                            id="basic-icon-default-fullname" placeholder="Silahkan isi kategori produk"
-                                            aria-label="Silahkan isi kategori produk"
+                                            id="basic-icon-default-fullname" placeholder="Silahkan isi nama produk"
+                                            aria-label="Silahkan isi nama produk"
                                             aria-describedby="basic-icon-default-fullname2" value="{{ old('nama') }}" />
                                         @error('nama')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -76,8 +76,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 form-label" for="basic-icon-default
-message">Deskripsi</label>
+                                <label class="col-sm-2 form-label" for="basic-icon-default-message">Deskripsi</label>
                                 <div class="col-sm-10">
                                     <div class="input-group input-group-merge">
                                         <span id="basic-icon-default-message2" class="input-group-text"><i
@@ -93,16 +92,15 @@ message">Deskripsi</label>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 form-label" for="basic-icon-default
-phone">Harga</label>
+                                <label class="col-sm-2 form-label" for="basic-icon-default-phone">Harga</label>
                                 <div class="col-sm-10">
                                     <div class="input-group input-group-merge">
                                         <span id="basic-icon-default-phone2" class="input-group-text"><i
                                                 class="bx bx-dollar-circle"></i></span>
                                         <input type="text" name="harga" id="basic-icon-default-phone"
-                                            class="form-control phone-mask @error('harga') is-invalid @enderror"
-                                            placeholder="Rp 0" aria-label="Harga"
-                                            aria-describedby="basic-icon-default-phone2" value="{{ old('harga') }}" />
+                                            class="form-control @error('harga') is-invalid @enderror" placeholder="Rp 0"
+                                            aria-label="Harga" aria-describedby="basic-icon-default-phone2"
+                                            value="{{ old('harga') }}" />
                                         @error('harga')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -110,15 +108,14 @@ phone">Harga</label>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 form-label" for="basic-icon-default
-phone">Stok</label>
+                                <label class="col-sm-2 form-label" for="basic-icon-default-phone">Stok</label>
                                 <div class="col-sm-10">
                                     <div class="input-group input-group-merge">
                                         <span id="basic-icon-default-phone2" class="input-group-text"><i
                                                 class="bx bx-package"></i></span>
                                         <input type="text" name="stok" id="basic-icon-default-phone"
-                                            class="form-control phone-mask @error('stok') is-invalid @enderror"
-                                            placeholder="10" aria-label="10" aria-describedby="basic-icon-default-phone2"
+                                            class="form-control @error('stok') is-invalid @enderror" placeholder="10"
+                                            aria-label="10" aria-describedby="basic-icon-default-phone2"
                                             value="{{ old('stok') }}" />
                                         @error('stok')
                                             <div class="invalid-feedback">{{ $message }}</div>

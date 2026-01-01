@@ -14,38 +14,31 @@ class CategoryController extends Controller
             $query->where('nama', 'like', '%' . request('search') . '%');
         })->paginate(10);
 
-        return view('category.index', compact('categories'), [
-            'title' => 'Daftar Kategori'
-        ]);
+        return view('category.index', compact('categories'));
     }
 
     public function create(): View
     {
-        return view('category.create', [
-            'title' => 'Tambah Kategori Baru'
-        ]);
+        return view('category.create');
     }
-
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|unique:categories,nama',
         ]);
 
         Category::create([
             'nama' => $request->nama,
         ]);
 
-        return redirect()->route('category.index')
+        return redirect()->route('admin.category.index')
             ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    public function edit(Category $category,): View
+    public function edit(Category $category): View
     {
-        return view('category.edit', compact('category'), [
-            'title' => 'Edit Kategori'
-        ]);
+        return view('category.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
@@ -59,14 +52,14 @@ class CategoryController extends Controller
         ]);
 
         return redirect()
-            ->route('category.index')
+            ->route('admin.category.index')
             ->with('success', 'Kategori berhasil diperbarui.');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('category.index')
+        return redirect()->route('admin.category.index')
             ->with('success', 'Kategori berhasil dihapus.');
     }
 }

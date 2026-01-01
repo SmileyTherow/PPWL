@@ -6,7 +6,7 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         {{-- Breadcrumb dinamis --}}
         <x-breadcrumb :items="[
-            'Produk' => route('products.index'),
+            'Produk' => route('admin.products.index'),
             'Daftar Produk' => '',
         ]" />
 
@@ -16,7 +16,7 @@
                 <h5 class="mb-0">Daftar Produk</h5>
 
                 <!-- Search Form -->
-                <form action="{{ route('products.index') }}" method="GET" class="d-flex" style="width: 300px;">
+                <form action="{{ route('admin.products.index') }}" method="GET" class="d-flex" style="width: 300px;">
                     <input type="text" name="search" class="form-control form-control me-2" placeholder="Cari..."
                         value="{{ request('search') }}">
                     <button class="btn btn-primary btn-sm" type="submit">
@@ -55,19 +55,18 @@
                                     <td>{{ number_format($product->harga) }}</td>
                                     <td>{{ $product->stok }}</td>
                                     <td>
-                                        <a href="{{ route('products.edit', $product->id) }}"
-                                            class="btn btn-sm
-btn-primary">
+                                        <a href="{{ route('admin.products.edit', $product->id) }}"
+                                            class="btn btn-sm btn-primary">
                                             <i class="bx bx-edit"></i>
                                         </a>
 
                                         <form id="delete-form-{{ $product->id }}"
-                                            action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                            action="{{ route('admin.products.destroy', $product->id) }}" method="POST"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="btn btn-sm btn-danger"
-                                                onclick="deleteConfirm('{{ $product->id }}', '{{ $product->name }}')">
+                                                onclick="deleteConfirm('{{ $product->id }}', '{{ $product->nama }}')">
                                                 <i class="bx bx-trash"></i>
                                             </button>
                                         </form>
@@ -89,7 +88,7 @@ btn-primary">
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        {{-- PERBAIKAN: Fungsi menerima dua argumen (id dan name) dan menggunakannya di title --}}
+        // PERBAIKAN: fungsi menerima id dan nama (field 'nama')
         function deleteConfirm(id, name) {
             Swal.fire({
                 title: `Yakin mau hapus produk ${name}?`,

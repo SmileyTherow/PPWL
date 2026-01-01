@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Produk')
+@section('title', 'Tambah Kategori')
 
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         {{-- Breadcrumb dinamis --}}
         <x-breadcrumb :items="[
-            'Kategori' => route('category.index'),
+            'Kategori' => route('admin.category.index'),
             'Tambah Kategori' => '',
         ]" />
 
@@ -21,10 +21,10 @@
             <div class="col-xxl">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <form action="{{ route('category.store') }}" method="POST">
+                        <form action="{{ route('admin.category.store') }}" method="POST">
                             @csrf
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="basic-icon-default fullname">Nama
+                                <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Nama
                                     Kategori</label>
                                 <div class="col-sm-10">
                                     <div class="input-group input-group-merge">

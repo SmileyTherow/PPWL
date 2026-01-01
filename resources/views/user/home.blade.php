@@ -1,30 +1,41 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-primary" href="#">TokoKu</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs￾target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="">Produk</a></li>
-                {{-- Muncul hanya kalau sudah login --}}
-                @auth
-                    <li class="nav-item"><a class="nav-link" href="">Pesanan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="">Pembayaran</a></li>
-                @endauth
-            </ul>
-            {{-- Kalau belum login tampilkan tombol Login --}}
-            @guest
-                <a href="{{ route('login') }}" class="btn btn-primary ms-lg-3">Login</a>
-            @endguest
-            {{-- Kalau sudah login tampilkan tombol Logout --}}
-            @auth
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-danger ms-lg-3">Logout</button>
-                </form>
-            @endauth
+@extends('layouts.user.app')
+
+@section('title', 'Dashboard')
+
+@section('content')
+    <!-- Hero Section -->
+    <section class="py-5 bg-light text-center">
+        <div class="container">
+            <h1 class="fw-bold mb-3">Selamat Datang di <span class="text-primary">TokoKu</span></h1>
+            <p class="lead text-muted">Belanja mudah, cepat, dan terpercaya dengan produk pilihan terbaik.</p>
+            <a href="#produk" class="btn btn-primary btn-lg mt-3">Belanja Sekarang</a>
         </div>
+    </section>
+
+    <!-- Produk Section -->
+    <div class="container">
+        <section id="produk" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5 fw-bold">Produk Unggulan</h2>
+                <div class="row g-5 mt-3">
+                    @forelse($products as $product)
+                        <div class="col-md-3">
+                            <div class="card h-100 shadow-sm">
+                                <img src="{{ asset('storage/' . $product->foto) }}" class="card-img-top"
+                                    alt="{{ $product->nama }}">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ $product->nama }}</h5>
+                                    <p class="card-text text-muted">Rp {{ number_format($product->harga, 0, ',', '.') }}</p>
+                                    <a href="{{ route('products.show', $product->id) }}"
+                                        class="btn btn-outline-primary">Produk Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-center">Belum ada produk tersedia.</p>
+                    @endforelse
+                </div>
+            </div>
+        </section>
     </div>
-</nav>
+@endsection

@@ -2,68 +2,111 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use App\Models\Order;
-use App\Models\OrderItem;
+use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
 {
-    // Menampilkan halaman checkout
     public function index()
     {
         $cart = Session::get('cart', []);
-        return view('user.checkout', compact('cart'));
+        $user = Auth::user();
+        return view('user.checkout', compact('cart', 'user'));
     }
-
-    // Proses checkout: simpan order & items ke DB
     public function process(Request $request)
     {
-        $cart = Session::get('cart', []);
+        $cart = session()->get('cart', []);
+
         if (!$cart || count($cart) === 0) {
             return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong.');
         }
 
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
             'alamat' => 'required|string',
             'telepon' => 'required|string|max:20',
             'metode' => 'required|string',
         ]);
 
-        // hitung total
-        $grandTotal = 0;
-        foreach ($cart as $id => $item) {
-            $grandTotal += ($item['harga'] * $item['quantity']);
-        }
+        $total = collect($cart)->sum(fn($item) => $item['harga'] *
+            $item['quantity']);
 
-        // buat order
+        $orderId = time() + rand(1000, 9999);
         $order = Order::create([
+            'id' => $orderId,
             'user_id' => Auth::id(),
-            'nama' => $validated['nama'],
+            'tanggal' => now(),
+            'total' => $total,
             'alamat' => $validated['alamat'],
             'telepon' => $validated['telepon'],
             'metode' => $validated['metode'],
-            'total' => $grandTotal,
-            'status' => 'pending',
+            'status_pembayaran' => 'pending',
         ]);
 
-        // simpan order items
-        foreach ($cart as $id => $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $id,
-                'nama' => $item['nama'],
-                'quantity' => $item['quantity'],
-                'harga' => $item['harga'],
-                'subtotal' => $item['harga'] * $item['quantity'],
+        foreach ($cart as $productId => $item) {
+            $order->products()->attach($productId, [
+                'jumlah' => $item['quantity'],
+                'harga_satuan' => $item['harga'],
             ]);
+
+            $product = Product::find($productId);
+
+            if ($product) {
+                if ($product->stok < $item['quantity']) {
+                    return redirect()->back()->with(
+                        'error',
+                        "Stok produk {$product->nama} tidak mencukupi."
+                    );
+                }
+                $product->stok = $product->stok - $item['quantity'];
+                $product->save();
+            }
         }
 
-        // kosongkan keranjang
-        Session::forget('cart');
+        session()->forget('cart');
 
-        return redirect()->route('checkout.index')->with('success', 'Pesanan berhasil diproses! Nomor pesanan: ' . $order->id);
+        return redirect()->route('checkout.sukses')->with('success', 'Pesanan berhasil diproses!');
+    }
+
+    public function sukses()
+    {
+        $order = Order::where('user_id', Auth::id())->latest()->first();
+        return view('user.sukses', compact('order'));
+    }
+
+    public function updatePaymentProof(Request $request, Order $order)
+    {
+        if ($order->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $request->validate([
+            'bukti_pembayaran' => 'required|file|mimes:jpg,png,pdf|max:2048',
+        ]);
+
+        if ($request->hasFile('bukti_pembayaran')) {
+            if ($order->bukti_pembayaran && Storage::disk('public')->exists('payment/' . $order->bukti_pembayaran)) {
+                Storage::disk('public')->delete('payment/' . $order->bukti_pembayaran);
+            }
+
+            $file = $request->file('bukti_pembayaran');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('payment', $filename, 'public');
+
+            $order->bukti_pembayaran = $filename;
+
+            $order->status_pembayaran = 'menunggu konfirmasi';
+            $order->save();
+        }
+
+        return redirect()->route('orders.history')->with('success', 'Bukti pembayaran berhasil diupload.');
+    }
+
+    public function showPayment(Order $order)
+    {
+        return view('admin.payments.show', compact('order'));
     }
 }
